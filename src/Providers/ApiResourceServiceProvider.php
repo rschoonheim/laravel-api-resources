@@ -2,9 +2,11 @@
 
 namespace Rschoonheim\LaravelApiResource\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\ServiceProvider;
 use Rschoonheim\LaravelApiResource\Exceptions\ResourcesConfigurationException;
+use Rschoonheim\LaravelApiResource\Routing\ResourceDispatcher;
 
 /**
  * class ApiResourceServiceProvider.
@@ -21,12 +23,18 @@ class ApiResourceServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        \Illuminate\Routing\Route::macro('resources', function() {
+            return new ResourceDispatcher(
+                app()->make(Router::class)
+            );
+        });
+
+        $this->loadResourceRoutes();
+
         $this->publishes([
             __DIR__ . '/../../assets/config/resources.php' => config_path('resources.php'),
             __DIR__ . '/../../assets/routes/resources.php' => base_path('routes/resources.php'),
         ]);
-
-        $this->loadResourceRoutes();
     }
 
     /**
@@ -50,8 +58,7 @@ class ApiResourceServiceProvider extends ServiceProvider
         /**
          * Register routes.
          */
-        Route::middleware('api')
-            ->prefix('resource')
+        Route::middleware('web')
             ->group($routeFilePath);
     }
 }
