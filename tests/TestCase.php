@@ -3,6 +3,7 @@
 namespace Rschoonheim\LaravelApiResource\Tests;
 
 use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Rschoonheim\LaravelApiResource\Providers\ApiResourceServiceProvider;
 use Spatie\QueryBuilder\QueryBuilderServiceProvider;
 
@@ -13,6 +14,8 @@ use Spatie\QueryBuilder\QueryBuilderServiceProvider;
  */
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
+    use DatabaseTransactions;
+
     /**
      * Appends package configurations to application configurations.
      *

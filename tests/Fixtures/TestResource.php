@@ -15,10 +15,10 @@ use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourcePaginate;
     ResourceModel(namespace: TestModel::class),
     ResourcePaginate(),
     ResourceIndex(
-        filterable: [],
-        sortable: [],
-        includedRelationships: [],
-        selectableFields: []
+        filterable: ['age', 'naam', 'achternaam'],
+        sortable: ['id'],
+        includedRelationships: ['invoices'],
+        selectableFields: ['age', 'naam', 'invoices.id', ]
     )
 ]
 class TestResource

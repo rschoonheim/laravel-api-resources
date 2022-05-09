@@ -41,31 +41,13 @@ class ResourceRegister
     {
         $reader = new ResourceReader($resource);
 
-        $model =  $reader->getEloquentModel();
-
-
-
-        dd($reader);
-
-
-
-
-
-        /**
-         * Should an index resource be made?
-         */
-        $indexResource = $reflection->getAttributes(ResourceIndex::class);
-        if (isset($indexResource[0])) {
-            $indexResource = $indexResource[0];
-            $arguments = $indexResource->getArguments();
-            $arguments['eloquentModel'] = $model;
-            $arguments['paginate'] = false;
-            if (isset($reflection->getAttributes(ResourcePaginate::class)[0])) {
-                $arguments['paginate'] = true;
-            }
-
-            $this->index($path, $arguments);
+        if ($reader->hasIndex()) {
+            $this->index(
+                $path,
+                $reader->getIndexArguments()
+            );
         }
+
 
         return $this;
     }
@@ -83,7 +65,7 @@ class ResourceRegister
             ResourceIndexMacro::handler($options)
         );
 
-        $this->router->get($path, [Resource::class, 'index']);
+        $this->router->get($path, [Resource::class, ResourceIndexMacro::getName()]);
 
         return $this;
     }

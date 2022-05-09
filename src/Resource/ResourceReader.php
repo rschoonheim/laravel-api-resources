@@ -3,7 +3,9 @@
 namespace Rschoonheim\LaravelApiResource\Resource;
 
 use ReflectionClass;
+use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceIndex;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceModel;
+use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourcePaginate;
 use Rschoonheim\LaravelApiResource\Resource\Exceptions\ResourceConfigurationException;
 
 /**
@@ -39,5 +41,25 @@ class ResourceReader
             );
         }
         return $modelAttribute[0]->getArguments()['namespace'];
+    }
+
+    public function hasIndex(): bool
+    {
+        return isset(
+            $this->reflectionClass->getAttributes(ResourceIndex::class)[0]
+        );
+    }
+
+    public function getIndexArguments()
+    {
+        $indexResource = $this->reflectionClass->getAttributes(ResourceIndex::class)[0];
+        $arguments = $indexResource->getArguments();
+        $arguments['eloquentModel'] = $this->getEloquentModel();
+        $arguments['paginate'] = false;
+        if (isset($this->reflectionClass->getAttributes(ResourcePaginate::class)[0])) {
+            $arguments['paginate'] = true;
+        }
+
+        return $arguments;
     }
 }
