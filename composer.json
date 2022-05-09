@@ -16,5 +16,12 @@
             "email": "romano@romanoschoonheim.nl"
         }
     ],
-    "require": {}
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Rschoonheim\\LaravelApiResource\\Providers\\ApiResourceServiceProvider"
+            ]
+        }
+    }
 }
