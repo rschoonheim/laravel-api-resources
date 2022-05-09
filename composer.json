@@ -2,6 +2,7 @@
     "name": "rschoonheim/laravel-api-resource",
     "description": "Easily build API resources with Laravel.",
     "type": "library",
+    "license": "MIT",
     "scripts": {
         "test": "vendor/bin/phpunit"
     },
