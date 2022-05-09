@@ -8,7 +8,9 @@ use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceIndex;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceModel;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourcePaginate;
 use Rschoonheim\LaravelApiResource\Resource\Exceptions\ResourceConfigurationException;
+use Rschoonheim\LaravelApiResource\Resource\Macros\ResourceIndexMacro;
 use Rschoonheim\LaravelApiResource\Resource\Resource;
+use Rschoonheim\LaravelApiResource\Resource\ResourceReader;
 use Rschoonheim\LaravelApiResource\Tests\Fixtures\TestModel;
 use Spatie\QueryBuilder\QueryBuilder;
 
@@ -37,21 +39,17 @@ class ResourceRegister
      */
     public function load(string $path, string $resource): self
     {
-        $reflection = new \ReflectionClass($resource);
+        $reader = new ResourceReader($resource);
 
-        /**
-         * Get resource model.
-         */
-        $modelAttribute = $reflection->getAttributes(ResourceModel::class);
-        if (empty($modelAttribute)) {
-            throw new ResourceConfigurationException('Could not find ' . ResourceModel::class . ' attribute.');
-        }
-        if (count($modelAttribute) > 1) {
-            throw new ResourceConfigurationException(
-                'Too many ' . ResourceModel::class . ' attributes found. Max 1'
-            );
-        }
-        $model = $modelAttribute[0]->getArguments()['namespace'];
+        $model =  $reader->getEloquentModel();
+
+
+
+        dd($reader);
+
+
+
+
 
         /**
          * Should an index resource be made?
@@ -80,21 +78,10 @@ class ResourceRegister
      * @return \Rschoonheim\LaravelApiResource\Routing\ResourceRegister
      */
     public function index(string $path, array $options = []): self {
-        Resource::macro('index', function() use ($options) {
-            $model = QueryBuilder::for($options['eloquentModel'])
-                ->allowedFields($options['selectableFields'])
-                ->allowedFilters($options['filterable'])
-                ->allowedSorts($options['sortable'])
-                ->allowedIncludes($options['includedRelationships']);
-
-            if ($options['paginate']) {
-                $model->paginate()->appends(request()->query());
-            }
-
-            return response()->json([
-                'data' => $model->get()->all()
-            ]);
-        });
+        Resource::macro(
+            ResourceIndexMacro::getName(),
+            ResourceIndexMacro::handler($options)
+        );
 
         $this->router->get($path, [Resource::class, 'index']);
 
