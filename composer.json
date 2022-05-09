@@ -10,6 +10,11 @@
             "Rschoonheim\\LaravelApiResource\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Rschoonheim\\LaravelApiResource\\Tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Romano Schoonheim",
