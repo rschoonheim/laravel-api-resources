@@ -6,6 +6,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Traits\Macroable;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceIndex;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceModel;
+use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourcePaginate;
 use Rschoonheim\LaravelApiResource\Resource\Exceptions\ResourceConfigurationException;
 use Rschoonheim\LaravelApiResource\Resource\Resource;
 use Rschoonheim\LaravelApiResource\Tests\Fixtures\TestModel;
@@ -60,6 +61,10 @@ class ResourceDispatcher
             $indexResource = $indexResource[0];
             $arguments = $indexResource->getArguments();
             $arguments['eloquentModel'] = $model;
+            $arguments['paginate'] = false;
+            if (isset($reflection->getAttributes(ResourcePaginate::class)[0])) {
+                $arguments['paginate'] = true;
+            }
 
             $this->index($path, $arguments);
         }
@@ -81,6 +86,10 @@ class ResourceDispatcher
                 ->allowedFilters($options['filterable'])
                 ->allowedSorts($options['sortable'])
                 ->allowedIncludes($options['includedRelationships']);
+
+            if ($options['paginate']) {
+                $model->paginate()->appends(request()->query());
+            }
 
             return response()->json([
                 'data' => $model->get()->all()
