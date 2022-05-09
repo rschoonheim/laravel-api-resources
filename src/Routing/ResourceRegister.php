@@ -9,6 +9,7 @@ use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceModel;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourcePaginate;
 use Rschoonheim\LaravelApiResource\Resource\Exceptions\ResourceConfigurationException;
 use Rschoonheim\LaravelApiResource\Resource\Macros\ResourceIndexMacro;
+use Rschoonheim\LaravelApiResource\Resource\Macros\ResourceShowMacro;
 use Rschoonheim\LaravelApiResource\Resource\Resource;
 use Rschoonheim\LaravelApiResource\Resource\ResourceReader;
 use Rschoonheim\LaravelApiResource\Tests\Fixtures\TestModel;
@@ -48,6 +49,31 @@ class ResourceRegister
             );
         }
 
+        if ($reader->hasShow()) {
+            $this->show(
+                $path . '/{id}',
+                $reader->getShowArguments()
+            );
+        }
+
+
+        return $this;
+    }
+
+    /**
+     * Registers a show resource to Laravel.
+     *
+     * @param string $path
+     * @param array $options
+     * @return \Rschoonheim\LaravelApiResource\Routing\ResourceRegister
+     */
+    public function show(string $path, array $options = []): self {
+        Resource::macro(
+            ResourceShowMacro::getName(),
+            ResourceShowMacro::handler($options)
+        );
+
+        $this->router->get($path, [Resource::class, ResourceShowMacro::getName()]);
 
         return $this;
     }

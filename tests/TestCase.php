@@ -3,8 +3,11 @@
 namespace Rschoonheim\LaravelApiResource\Tests;
 
 use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Rschoonheim\LaravelApiResource\Providers\ApiResourceServiceProvider;
+use Rschoonheim\LaravelApiResource\Tests\Fixtures\TestingServiceProvider;
 use Spatie\QueryBuilder\QueryBuilderServiceProvider;
 
 /**
@@ -14,7 +17,7 @@ use Spatie\QueryBuilder\QueryBuilderServiceProvider;
  */
 abstract class TestCase extends \Orchestra\Testbench\TestCase
 {
-    use DatabaseTransactions;
+    use RefreshDatabase;
 
     /**
      * Appends package configurations to application configurations.
@@ -38,6 +41,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     protected function getPackageProviders($app): array
     {
         return [
+            TestingServiceProvider::class,
             QueryBuilderServiceProvider::class,
             ApiResourceServiceProvider::class,
         ];

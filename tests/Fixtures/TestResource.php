@@ -5,6 +5,7 @@ namespace Rschoonheim\LaravelApiResource\Tests\Fixtures;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceIndex;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceModel;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourcePaginate;
+use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceShow;
 
 /**
  * class TestResource.
@@ -19,6 +20,9 @@ use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourcePaginate;
         sortable: ['id'],
         includedRelationships: ['invoices'],
         selectableFields: ['age', 'naam', 'invoices.id', ]
+    ),
+    ResourceShow(
+        primary: 'id'
     )
 ]
 class TestResource

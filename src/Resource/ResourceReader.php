@@ -6,6 +6,7 @@ use ReflectionClass;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceIndex;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceModel;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourcePaginate;
+use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceShow;
 use Rschoonheim\LaravelApiResource\Resource\Exceptions\ResourceConfigurationException;
 
 /**
@@ -43,14 +44,24 @@ class ResourceReader
         return $modelAttribute[0]->getArguments()['namespace'];
     }
 
-    public function hasIndex(): bool
+    public function hasAttribute(string $attribute): bool
     {
         return isset(
-            $this->reflectionClass->getAttributes(ResourceIndex::class)[0]
+            $this->reflectionClass->getAttributes($attribute)[0]
         );
     }
 
-    public function getIndexArguments()
+    public function hasShow(): bool
+    {
+        return $this->hasAttribute(ResourceShow::class);
+    }
+
+    public function hasIndex(): bool
+    {
+        return $this->hasAttribute(ResourceIndex::class);
+    }
+
+    public function getIndexArguments(): array
     {
         $indexResource = $this->reflectionClass->getAttributes(ResourceIndex::class)[0];
         $arguments = $indexResource->getArguments();
@@ -61,5 +72,12 @@ class ResourceReader
         }
 
         return $arguments;
+    }
+
+    public function getShowArguments(): array
+    {
+        return [
+            'eloquentModel' => $this->getEloquentModel()
+        ];
     }
 }
