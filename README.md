@@ -1,0 +1,11 @@
+# Laravel API Resources
+
+
+## Dependencies
+
+
+
+
+
+
+

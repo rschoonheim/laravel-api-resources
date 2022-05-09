@@ -21,7 +21,9 @@
             "email": "romano@romanoschoonheim.nl"
         }
     ],
-    "require": {},
+    "require": {
+        "spatie/laravel-query-builder": "^5.0"
+    },
     "extra": {
         "laravel": {
             "providers": [
