@@ -4,10 +4,12 @@ namespace Rschoonheim\LaravelApiResource\Routing;
 
 use Illuminate\Routing\Router;
 use Illuminate\Support\Traits\Macroable;
+use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceIndex;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceModel;
 use Rschoonheim\LaravelApiResource\Resource\Exceptions\ResourceConfigurationException;
 use Rschoonheim\LaravelApiResource\Resource\Resource;
 use Rschoonheim\LaravelApiResource\Tests\Fixtures\TestModel;
+use Spatie\QueryBuilder\QueryBuilder;
 
 /**
  * class ResourcesMacro.
@@ -29,6 +31,8 @@ class ResourceDispatcher
      * @param string $path
      * @param string $resource
      * @return $this
+     * @throws \ReflectionException
+     * @throws \Rschoonheim\LaravelApiResource\Resource\Exceptions\ResourceConfigurationException
      */
     public function load(string $path, string $resource): self
     {
@@ -41,17 +45,24 @@ class ResourceDispatcher
         if (empty($modelAttribute)) {
             throw new ResourceConfigurationException('Could not find ' . ResourceModel::class . ' attribute.');
         }
-
         if (count($modelAttribute) > 1) {
             throw new ResourceConfigurationException(
                 'Too many ' . ResourceModel::class . ' attributes found. Max 1'
             );
         }
-
         $model = $modelAttribute[0]->getArguments()['namespace'];
 
+        /**
+         * Should an index resource be made?
+         */
+        $indexResource = $reflection->getAttributes(ResourceIndex::class);
+        if (isset($indexResource[0])) {
+            $indexResource = $indexResource[0];
+            $arguments = $indexResource->getArguments();
+            $arguments['eloquentModel'] = $model;
 
-        $this->index($path, $model);
+            $this->index($path, $arguments);
+        }
 
         return $this;
     }
@@ -59,14 +70,20 @@ class ResourceDispatcher
     /**
      * Registers an index resource to Laravel.
      *
-     * @return void
+     * @param string $path
+     * @param array $options
+     * @return \Rschoonheim\LaravelApiResource\Routing\ResourceDispatcher
      */
-    public function index(string $path, string $eloquentModel): self
-    {
-        Resource::macro('index', function() use ($eloquentModel) {
-            $model = app()->make($eloquentModel);
+    public function index(string $path, array $options = []): self {
+        Resource::macro('index', function() use ($options) {
+            $model = QueryBuilder::for($options['eloquentModel'])
+                ->allowedFields($options['selectableFields'])
+                ->allowedFilters($options['filterable'])
+                ->allowedSorts($options['sortable'])
+                ->allowedIncludes($options['includedRelationships']);
+
             return response()->json([
-                'data' => $model->all()
+                'data' => $model->get()->all()
             ]);
         });
 

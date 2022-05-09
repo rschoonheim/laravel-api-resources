@@ -2,6 +2,7 @@
 
 namespace Rschoonheim\LaravelApiResource\Resource;
 
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Traits\Macroable;
 
 /**
@@ -9,7 +10,7 @@ use Illuminate\Support\Traits\Macroable;
  *
  * @package Rschoonheim\LaravelApiResource\Resource;
  */
-class Resource
+class Resource extends Controller
 {
     use Macroable {
         __call as macroCall;

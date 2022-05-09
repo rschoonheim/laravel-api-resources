@@ -2,6 +2,7 @@
 
 namespace Rschoonheim\LaravelApiResource\Tests\Fixtures;
 
+use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceIndex;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceModel;
 
 /**
@@ -9,7 +10,15 @@ use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceModel;
  *
  * @package Rschoonheim\LaravelApiResource\Tests\Fixtures;
  */
-#[ResourceModel(namespace: TestModel::class)]
+#[
+    ResourceModel(namespace: TestModel::class),
+    ResourceIndex(
+        filterable: [],
+        sortable: [],
+        includedRelationships: [],
+        selectableFields: []
+    )
+]
 class TestResource
 {
 

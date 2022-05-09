@@ -12,7 +12,7 @@ use Attribute;
 #[Attribute]
 class ResourceModel
 {
-    public string $namespace;
+    public readonly string $namespace;
 
     public function __construct(string $namespace)
     {

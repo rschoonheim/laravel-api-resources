@@ -4,6 +4,7 @@ namespace Rschoonheim\LaravelApiResource\Tests;
 
 use Illuminate\Foundation\Application;
 use Rschoonheim\LaravelApiResource\Providers\ApiResourceServiceProvider;
+use Spatie\QueryBuilder\QueryBuilderServiceProvider;
 
 /**
  * class TestCase.
@@ -34,6 +35,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     protected function getPackageProviders($app): array
     {
         return [
+            QueryBuilderServiceProvider::class,
             ApiResourceServiceProvider::class,
         ];
     }
