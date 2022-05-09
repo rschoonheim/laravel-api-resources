@@ -1,0 +1,20 @@
+{
+    "name": "rschoonheim/laravel-api-resource",
+    "description": "Easily build API resources with Laravel.",
+    "type": "library",
+    "require-dev": {
+        "orchestra/testbench": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rschoonheim\\LaravelApiResource\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Romano Schoonheim",
+            "email": "romano@romanoschoonheim.nl"
+        }
+    ],
+    "require": {}
+}
