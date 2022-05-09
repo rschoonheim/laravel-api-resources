@@ -13,11 +13,11 @@ use Rschoonheim\LaravelApiResource\Tests\Fixtures\TestModel;
 use Spatie\QueryBuilder\QueryBuilder;
 
 /**
- * class ResourcesMacro.
+ * class ResourceRegister.
  *
  * @package Rschoonheim\LaravelApiResource\Macros;
  */
-class ResourceDispatcher
+class ResourceRegister
 {
     private Router $router;
 
@@ -77,7 +77,7 @@ class ResourceDispatcher
      *
      * @param string $path
      * @param array $options
-     * @return \Rschoonheim\LaravelApiResource\Routing\ResourceDispatcher
+     * @return \Rschoonheim\LaravelApiResource\Routing\ResourceRegister
      */
     public function index(string $path, array $options = []): self {
         Resource::macro('index', function() use ($options) {

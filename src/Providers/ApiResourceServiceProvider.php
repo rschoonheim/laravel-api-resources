@@ -6,7 +6,7 @@ use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Rschoonheim\LaravelApiResource\Exceptions\ResourcesConfigurationException;
-use Rschoonheim\LaravelApiResource\Routing\ResourceDispatcher;
+use Rschoonheim\LaravelApiResource\Routing\ResourceRegister;
 
 /**
  * class ApiResourceServiceProvider.
@@ -24,7 +24,7 @@ class ApiResourceServiceProvider extends ServiceProvider
     public function register(): void
     {
         \Illuminate\Routing\Route::macro('resources', function() {
-            return new ResourceDispatcher(
+            return new ResourceRegister(
                 app()->make(Router::class)
             );
         });
