@@ -2,6 +2,9 @@
     "name": "rschoonheim/laravel-api-resource",
     "description": "Easily build API resources with Laravel.",
     "type": "library",
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
     "require-dev": {
         "orchestra/testbench": "^7.4"
     },
