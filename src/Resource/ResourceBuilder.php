@@ -98,6 +98,9 @@ class ResourceBuilder
             $controller::macro($name, $handler::handle($this->configuration, $arguments));
         }
 
+        // Register routing for resource.
+
+
         return $controller;
     }
 

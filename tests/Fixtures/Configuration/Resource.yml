@@ -1,0 +1,9 @@
+identifier: "test-identifier"
+location: "/root/path"
+name: "some-test-name"
+routes:
+    - get@/:method1
+methods: {
+    method1: {},
+    method2: {}
+}
