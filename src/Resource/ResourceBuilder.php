@@ -2,6 +2,12 @@
 
 namespace Rschoonheim\LaravelApiResource\Resource;
 
+use Rschoonheim\LaravelApiResource\Resource\Exceptions\ResourceConfigurationException;
+use Rschoonheim\LaravelApiResource\Resource\Macros\DestroyMacroHandler;
+use Rschoonheim\LaravelApiResource\Resource\Macros\IndexMacroHandler;
+use Rschoonheim\LaravelApiResource\Resource\Macros\ShowMacroHandler;
+use Rschoonheim\LaravelApiResource\Resource\Macros\StoreMacroHandler;
+use Rschoonheim\LaravelApiResource\Resource\Macros\UpdateMacroHandler;
 use Rschoonheim\LaravelApiResource\Resource\Models\DynamicResourceController;
 use Rschoonheim\LaravelApiResource\Resource\Models\ResourceConfiguration;
 use Rschoonheim\LaravelApiResource\Resource\Normalizers\EloquentNormalizer;
@@ -27,6 +33,7 @@ class ResourceBuilder
      *
      * @param object $resource
      * @return static
+     * @throws Exceptions\ResourceConfigurationException
      */
     public static function resource(object $resource): self
     {
@@ -64,10 +71,34 @@ class ResourceBuilder
      * Returns a freshly instantiated dynamic resource controller based on builder state.
      *
      * @return DynamicResourceController
+     * @throws ResourceConfigurationException
      */
     public function result(): DynamicResourceController
     {
-        return new DynamicResourceController();
+        $controller = new DynamicResourceController();
+
+        // Bind methods.
+        foreach ($this->configuration->methods as $name => $arguments) {
+
+            $handler = match ($name) {
+                'index' => IndexMacroHandler::class,
+                'show' => ShowMacroHandler::class,
+                'store' => StoreMacroHandler::class,
+                'update' => UpdateMacroHandler::class,
+                'destroy' => DestroyMacroHandler::class,
+                default => null,
+            };
+
+            if (is_null($handler)) {
+                throw new ResourceConfigurationException(
+                    "Could not find a handler for method: {$name}"
+                );
+            }
+
+            $controller::macro($name, $handler::handle($this->configuration, $arguments));
+        }
+
+        return $controller;
     }
 
 }

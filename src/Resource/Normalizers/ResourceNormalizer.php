@@ -12,10 +12,18 @@ use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceStore;
 use Rschoonheim\LaravelApiResource\Resource\Attributes\ResourceUpdate;
 use Rschoonheim\LaravelApiResource\Resource\Exceptions\ResourceAttributeDuplicationException;
 use Rschoonheim\LaravelApiResource\Resource\Exceptions\ResourceConfigurationException;
+use Rschoonheim\LaravelApiResource\Resource\Macros\DestroyMacroHandler;
+use Rschoonheim\LaravelApiResource\Resource\Macros\IndexMacroHandler;
+use Rschoonheim\LaravelApiResource\Resource\Macros\ShowMacroHandler;
+use Rschoonheim\LaravelApiResource\Resource\Macros\StoreMacroHandler;
+use Rschoonheim\LaravelApiResource\Resource\Macros\UpdateMacroHandler;
 
 class ResourceNormalizer
 {
-    private array $normalizedForm = [];
+    private array $normalizedForm = [
+        'persistence' => [],
+        'methods' => [],
+    ];
 
     private ReflectionClass $resource;
 
@@ -51,6 +59,7 @@ class ResourceNormalizer
             $this->resourceHasResourceModel('index');
             $this->defineMethod(
                 'index',
+                IndexMacroHandler::class,
                 $this->getAttributeArguments(ResourceIndex::class)
             );
         }
@@ -63,6 +72,7 @@ class ResourceNormalizer
             $this->resourceHasResourceModel('show');
             $this->defineMethod(
                 'show',
+                ShowMacroHandler::class,
                 $this->getAttributeArguments(ResourceShow::class)
             );
         }
@@ -75,6 +85,7 @@ class ResourceNormalizer
             $this->resourceHasResourceModel('store');
             $this->defineMethod(
                 'store',
+                StoreMacroHandler::class,
                 $this->getAttributeArguments(ResourceStore::class)
             );
         }
@@ -87,6 +98,7 @@ class ResourceNormalizer
             $this->resourceHasResourceModel('update');
             $this->defineMethod(
                 'update',
+                UpdateMacroHandler::class,
                 $this->getAttributeArguments(ResourceUpdate::class)
             );
         }
@@ -99,6 +111,7 @@ class ResourceNormalizer
             $this->resourceHasResourceModel('destroy');
             $this->defineMethod(
                 'destroy',
+                DestroyMacroHandler::class,
                 $this->getAttributeArguments(ResourceDestroy::class)
             );
         }
@@ -107,7 +120,7 @@ class ResourceNormalizer
         return $this->normalizedForm;
     }
 
-    private function defineMethod(string $method, array $arguments): void
+    private function defineMethod(string $method, string $handler, array $arguments): void
     {
         if (!array_key_exists('methods', $this->normalizedForm)) {
             $this->normalizedForm['methods'] = [];
