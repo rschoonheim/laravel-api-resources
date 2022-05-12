@@ -23,12 +23,6 @@ class ApiResourceServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        \Illuminate\Routing\Route::macro('resources', function() {
-            return new ResourceRegister(
-                app()->make(Router::class)
-            );
-        });
-
         $this->loadResourceRoutes();
 
         $this->publishes([

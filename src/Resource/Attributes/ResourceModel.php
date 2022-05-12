@@ -14,8 +14,11 @@ class ResourceModel
 {
     public readonly string $namespace;
 
-    public function __construct(string $namespace)
+    public readonly string $driver;
+
+    public function __construct(string $namespace, string $driver)
     {
         $this->namespace = $namespace;
+        $this->driver = $driver;
     }
 }
