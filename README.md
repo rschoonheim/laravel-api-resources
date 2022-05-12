@@ -25,7 +25,7 @@ Every basic API resource comes with behavior that is required in most modern app
  * Please make sure to use `\Illuminate\Routing\Route::resources()`.
  * This package doesn't work via the route facade (currently).
  * 
- * @var \Rschoonheim\LaravelApiResource\Routing\ResourceDispatcher $resources 
+ * @var \Rschoonheim\LaravelApiResource\Routing\ResourceRegister $resources 
  */
 $resources = \Illuminate\Routing\Route::resources();
 

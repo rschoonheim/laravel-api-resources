@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-/** @var \Rschoonheim\LaravelApiResource\Routing\ResourceDispatcher $resources */
+/** @var \Rschoonheim\LaravelApiResource\Routing\ResourceRegister $resources */
 $resources = \Illuminate\Routing\Route::resources();
 
 
